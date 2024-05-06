@@ -63,31 +63,49 @@ class InvoiceForm extends React.Component {
     this.state.items.push(items);
     this.setState(this.state.items);
   }
+
   handleCalculateTotal() {
     var items = this.state.items;
-    var subTotal = 0;
-
-    items.map(function(items) {
-      subTotal = parseFloat(subTotal + (parseFloat(items.price).toFixed(2) * parseInt(items.quantity))).toFixed(2)
-    });
-
+    var subTotal = items.reduce((total, item) => {
+      return total + parseFloat(item.price) * parseInt(item.quantity);
+    }, 0);
+  
+    var taxAmount = parseFloat(subTotal * (this.state.taxRate / 100)).toFixed(2);
+    var discountAmount = parseFloat(subTotal * (this.state.discountRate / 100)).toFixed(2);
+    var total = parseFloat(subTotal - discountAmount + parseFloat(taxAmount)).toFixed(2);
+  
     this.setState({
-      subTotal: parseFloat(subTotal).toFixed(2)
-    }, () => {
-      this.setState({
-        taxAmmount: parseFloat(parseFloat(subTotal) * (this.state.taxRate / 100)).toFixed(2)
-      }, () => {
-        this.setState({
-          discountAmmount: parseFloat(parseFloat(subTotal) * (this.state.discountRate / 100)).toFixed(2)
-        }, () => {
-          this.setState({
-            total: ((subTotal - this.state.discountAmmount) + parseFloat(this.state.taxAmmount))
-          });
-        });
-      });
+      subTotal: subTotal.toFixed(2),
+      taxAmount: taxAmount,
+      discountAmount: discountAmount,
+      total: total
     });
+  }
+  // handleCalculateTotal() {
+  //   var items = this.state.items;
+  //   var subTotal = 0;
 
-  };
+  //   items.map(function(items) {
+  //     subTotal = parseFloat(subTotal + (parseFloat(items.price).toFixed(2) * parseInt(items.quantity))).toFixed(2)
+  //   });
+
+  //   this.setState({
+  //     subTotal: parseFloat(subTotal).toFixed(2)
+  //   }, () => {
+  //     this.setState({
+  //       taxAmmount: parseFloat(parseFloat(subTotal) * (this.state.taxRate / 100)).toFixed(2)
+  //     }, () => {
+  //       this.setState({
+  //         discountAmmount: parseFloat(parseFloat(subTotal) * (this.state.discountRate / 100)).toFixed(2)
+  //       }, () => {
+  //         this.setState({
+  //           total: ((subTotal - this.state.discountAmmount) + parseFloat(this.state.taxAmmount))
+  //         });
+  //       });
+  //     });
+  //   });
+
+  // };
   onItemizedItemEdit(evt) {
     var item = {
       id: evt.target.id,
