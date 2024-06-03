@@ -16,7 +16,7 @@ class InvoiceForm extends React.Component {
       isOpen: false,
       currency: '₹',
       currentDate: '',
-      invoiceNumber: '33AFFFS1841B1ZH',
+      invoiceNumber: '',
       dateOfIssue: '',
       billTo: '',
       billToNumber: '',
@@ -30,7 +30,8 @@ class InvoiceForm extends React.Component {
       taxRate: '18',
       taxAmmount: '0.00',
       discountRate: '',
-      discountAmmount: '0.00'
+      discountAmmount: '0.00',
+      ourGst: '33AFFFS1841B1ZH'
     };
     this.state.items = [
       {
@@ -143,7 +144,7 @@ class InvoiceForm extends React.Component {
               </div>
               <div className="d-flex flex-row align-items-center">
                 <span className="fw-bold me-2">Invoice&nbsp;Number:&nbsp;</span>
-                <Form.Control type="text" value={this.state.invoiceNumber} name={"invoiceNumber"}  min="1" style={{
+                <Form.Control type="text" value={this.state.invoiceNumber} name={"invoiceNumber"}  onChange={(event) => this.editField(event)}  min="1" style={{
                     maxWidth: '70px',
                     minWidth:'140px'
                   }} required="required"/>
@@ -162,6 +163,7 @@ class InvoiceForm extends React.Component {
                 <Form.Control placeholder={"Who is this invoice from?"} rows={3} value={this.state.billFrom} type="text" name="billFrom" className="my-2" autoComplete="name" required="required"/>
                 <Form.Control placeholder={"Phone Number"} value={this.state.billFromNumber} type="number" name="billFromNumber" className="my-2" autoComplete='phone number' required="required"/>
                 <Form.Control placeholder={"Billing address"} value={this.state.billFromAddress} type="text" name="billFromAddress" className="my-2" autoComplete="address"  required="required"/>
+                <Form.Control placeholder={"Billing address"} value={this.state.ourGst} type="text" name="ourGst" className="my-2" autoComplete="gst"  required="required"/>
               </Col>
             </Row>
             <InvoiceItem onItemizedItemEdit={this.onItemizedItemEdit.bind(this)} onRowAdd={this.handleAddEvent.bind(this)} onRowDel={this.handleRowDel.bind(this)} currency={this.state.currency} items={this.state.items}/>
