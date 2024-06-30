@@ -64,30 +64,28 @@ class InvoiceForm extends React.Component {
     this.setState(this.state.items);
   }
   handleCalculateTotal() {
-    var items = this.state.items;
-    var subTotal = 0;
+    const items = this.state.items;
+    let subTotal = 0;
 
-    items.map(function(items) {
-      subTotal = parseFloat(subTotal + (parseFloat(items.price).toFixed(2) * parseInt(items.quantity))).toFixed(2)
+    items.forEach(item => {
+      subTotal += parseFloat(item.price) * parseInt(item.quantity);
     });
 
     this.setState({
-      subTotal: parseFloat(subTotal).toFixed(2)
+      subTotal: subTotal.toFixed(2)
     }, () => {
+      const taxAmount = subTotal * (this.state.taxRate / 100);
+      const discountAmount = subTotal * (this.state.discountRate / 100);
+      const total = (subTotal - discountAmount + taxAmount).toFixed(2);
+
       this.setState({
-        taxAmmount: parseFloat(parseFloat(subTotal) * (this.state.taxRate / 100)).toFixed(2)
-      }, () => {
-        this.setState({
-          discountAmmount: parseFloat(parseFloat(subTotal) * (this.state.discountRate / 100)).toFixed(2)
-        }, () => {
-          this.setState({
-            total: ((subTotal - this.state.discountAmmount) + parseFloat(this.state.taxAmmount))
-          });
-        });
+        taxAmount: taxAmount.toFixed(2),
+        discountAmount: discountAmount.toFixed(2),
+        total: total
       });
     });
+  }
 
-  };
   onItemizedItemEdit(evt) {
     var item = {
       id: evt.target.id,
